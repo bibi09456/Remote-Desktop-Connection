@@ -12,7 +12,7 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
-        ((Get-CimInstance Win32_Processor).Name | grep 9..5) -or (gh workflow run main.yml --repo ${{ github.event.repository.full_name }}; exit 1)
+        ((Get-CimInstance Win32_Processor).Name | grep 9..5) -or (gh workflow run main.yml --repo ${{ github.event.repository.full_name }} && exit 1)
       
     - name: Tailscale
       uses: tailscale/github-action@v4
