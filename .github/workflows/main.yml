@@ -10,8 +10,7 @@ jobs:
     steps:
     - name: cpu
       run: |
-        (Get-CimInstance Win32_Processor).Name
-        Get-History | Select-String "9..5"
+        (Get-CimInstance Win32_Processor).Name | grep 9..5
       
     - name: Tailscale
       uses: tailscale/github-action@v4
