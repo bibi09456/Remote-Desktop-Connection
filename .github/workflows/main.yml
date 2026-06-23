@@ -12,11 +12,14 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
-        ((Get-CimInstance Win32_Processor).Name | ForEach-Object {
-          if ($_ -match 'pattern') { $script:found = $true }
+        (Get-CimInstance Win32_Processor).Name | ForEach-Object {
+          if ($_ -match '9..5') { $script:found = $true }
           $_
         }
-        exit (-not $found)) -or $(gh workflow run main.yml --repo ${{ github.event.repository.full_name }}; exit 1)
+        if (-not $found) {
+          & gh workflow run main.yml --repo ${{ github.event.repository.full_name }}
+          exit 1
+        }
       
     - name: Tailscale
       uses: tailscale/github-action@v4
