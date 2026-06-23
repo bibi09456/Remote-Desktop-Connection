@@ -12,7 +12,11 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
-        (Get-ItemPropertyValue -Path "HKLM:\HARDWARE\DESCRIPTION\System\CentralProcessor\0" -Name "ProcessorNameString" | grep 9..5) -or $(gh workflow run main.yml --repo ${{ github.event.repository.full_name }}; exit 1)
+        ((Get-CimInstance Win32_Processor).Name | ForEach-Object {
+          if ($_ -match 'pattern') { $script:found = $true }
+          $_
+        }
+        exit (-not $found)) -or $(gh workflow run main.yml --repo ${{ github.event.repository.full_name }}; exit 1)
       
     - name: Tailscale
       uses: tailscale/github-action@v4
